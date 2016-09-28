@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Appointment.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;UnittestenAppointment&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">fontys.Appointment</a> &gt; <span class="el_source">Appointment.java</span></div><h1>Appointment.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fontys.Appointment;
+
+import fontys.time.ITimeSpan;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ *
+ * @author Stefan
+ */
+public class Appointment
+{
+    private String subject;
+    
+    private ITimeSpan timeSpan;
+    private List&lt;Contact&gt; invitees;
+    
+    /**
+     *
+     * @param subject can be empty
+     * @param timeSpan
+     */
+    public Appointment(String subject, ITimeSpan timeSpan)
+<span class="fc" id="L30">    {</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if(subject == null)</span>
+        {
+<span class="fc" id="L33">            throw new IllegalArgumentException(&quot;subject cannot be null&quot;);</span>
+        }
+        
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if(subject.isEmpty())</span>
+        {
+<span class="fc" id="L38">            throw new IllegalArgumentException(&quot;subject cannot be empty&quot;);</span>
+        }
+        
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if(timeSpan == null)</span>
+        {
+<span class="fc" id="L43">            throw new IllegalArgumentException(&quot;timeSpan cannot be null&quot;);</span>
+        }
+        
+<span class="fc" id="L46">        this.subject = subject;</span>
+<span class="fc" id="L47">        this.timeSpan = timeSpan;</span>
+        
+<span class="fc" id="L49">        invitees = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L50">    }</span>
+    
+    /**
+     *
+     * @return subject
+     */
+    public String getSubject()
+    {
+<span class="fc" id="L58">        return subject;</span>
+    }
+    
+    /**
+     *
+     * @return timeSpan
+     */
+    public ITimeSpan getTimeSpan()
+    {
+<span class="fc" id="L67">        return timeSpan;</span>
+    }
+    
+    /**
+     *
+     * @return Iterator of invitees
+     */
+    public Iterator&lt;Contact&gt; invitees()
+    {
+<span class="fc" id="L76">        return invitees.iterator();</span>
+    }
+    
+    /**
+     * adds this to contact.agenda and contact to this.invitees unless any timeSpan of contact.agenda conflicts with this.timeSpan
+     * @param contact
+     * @return true if contact successfully added to this and this succesfully added to contact.agenda, otherwise returns false
+     */
+    public boolean addContact(Contact contact)
+    {
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if(contact.addAppointment(this))</span>
+        {
+<span class="fc" id="L88">            invitees.add(contact);</span>
+<span class="fc" id="L89">            return true;</span>
+        }
+        
+<span class="fc" id="L92">        return false;</span>
+    }
+    
+    /**
+     * Removes an existing contact from invitees, represented by the parameter contact
+     * @param contact
+     */
+    public void removeContact(Contact contact)
+    {
+<span class="fc" id="L101">        invitees.remove(contact);</span>
+<span class="fc" id="L102">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

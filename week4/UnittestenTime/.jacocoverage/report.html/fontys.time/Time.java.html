@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Time.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;UnittestenTime&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">fontys.time</a> &gt; <span class="el_source">Time.java</span></div><h1>Time.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fontys.time;
+
+import java.util.GregorianCalendar;
+
+/**
+ *
+ * @author Frank Peeters, Nico Kuijpers
+ * 
+ * LET OP: De klasse Time bevat enkele fouten.
+ * 
+ */
+public class Time implements ITime {
+
+    private GregorianCalendar gc;
+
+    /**
+     * creation of a time-object with year y, month m, day d, hours h and
+     * minutes m; if the combination of y-m-d refers to a non-existing date 
+     * the value of this Time-object will be not guaranteed 
+     * @param y 
+     * @param m 1≤m≤12
+     * @param d 1≤d≤31
+     * @param h 0≤h≤23
+     * @param min 0≤m≤59
+     */
+<span class="fc" id="L30">    public Time(int y, int m, int d, int h, int min) {</span>
+<span class="fc bfc" id="L31" title="All 4 branches covered.">        if (m &lt; 1 || m &gt; 12) {</span>
+<span class="fc" id="L32">            throw new IllegalArgumentException(&quot;month must be within 1..12&quot;);</span>
+        }
+<span class="fc bfc" id="L34" title="All 4 branches covered.">        if (d &lt; 1 || d &gt; 31) {</span>
+<span class="fc" id="L35">            throw new IllegalArgumentException(&quot;day must be within 1..31&quot;);</span>
+        }
+<span class="fc bfc" id="L37" title="All 4 branches covered.">        if (h &lt; 0 || h &gt; 23) {</span>
+<span class="fc" id="L38">            throw new IllegalArgumentException(&quot;hours must be within 0..23&quot;);</span>
+        }
+<span class="fc bfc" id="L40" title="All 4 branches covered.">        if (min &lt; 0 || min &gt; 59) {</span>
+<span class="fc" id="L41">            throw new IllegalArgumentException(&quot;minutes must be within 0..59&quot;);</span>
+        }
+            
+<span class="fc" id="L44">        gc = new GregorianCalendar(y, m - 1, d, h, min);</span>
+<span class="fc" id="L45">    }</span>
+
+<span class="fc" id="L47">    Time(Time t) {</span>
+<span class="fc" id="L48">        gc = (GregorianCalendar) t.gc.clone();</span>
+<span class="fc" id="L49">    }</span>
+
+    @Override
+    public DayInWeek getDayInWeek() {
+<span class="fc" id="L53">        int day_of_week = gc.get(GregorianCalendar.DAY_OF_WEEK);</span>
+<span class="fc bfc" id="L54" title="All 7 branches covered.">        switch (day_of_week) {</span>
+            case GregorianCalendar.SUNDAY:
+<span class="fc" id="L56">                return DayInWeek.SUN;</span>
+            case GregorianCalendar.MONDAY:
+<span class="fc" id="L58">                return DayInWeek.MON;</span>
+            case GregorianCalendar.TUESDAY:
+<span class="fc" id="L60">                return DayInWeek.TUE;</span>
+            case GregorianCalendar.WEDNESDAY:
+<span class="fc" id="L62">                return DayInWeek.WED;</span>
+            case GregorianCalendar.THURSDAY:
+<span class="fc" id="L64">                return DayInWeek.THU;</span>
+            case GregorianCalendar.FRIDAY:
+<span class="fc" id="L66">                return DayInWeek.FRI;</span>
+            default: 
+<span class="fc" id="L68">                return DayInWeek.SAT;</span>
+        }
+    }
+
+    @Override
+    public int getYear() {
+<span class="fc" id="L74">        return gc.get(GregorianCalendar.YEAR);</span>
+    }
+
+    @Override
+    public int getMonth() {
+<span class="fc" id="L79">        return gc.get(GregorianCalendar.MONTH) + 1;</span>
+    }
+
+    @Override
+    public int getDay() {
+<span class="fc" id="L84">        return gc.get(GregorianCalendar.DAY_OF_MONTH);</span>
+    }
+
+    @Override
+    public int getHours() {
+<span class="fc" id="L89">        return gc.get(GregorianCalendar.HOUR_OF_DAY);</span>
+    }
+
+    @Override
+    public int getMinutes() {
+<span class="fc" id="L94">        return gc.get(GregorianCalendar.MINUTE);</span>
+    }
+
+    @Override
+    public ITime plus(int minutes) {
+<span class="fc" id="L99">        Time time = new Time(this);</span>
+<span class="fc" id="L100">        time.gc.add(GregorianCalendar.MINUTE, minutes);</span>
+<span class="fc" id="L101">        return time;</span>
+    }
+
+    @Override
+    public int compareTo(ITime t) {
+<span class="fc" id="L106">        Time time = (Time) t;</span>
+<span class="fc" id="L107">        return gc.compareTo(time.gc);</span>
+    }
+
+    @Override
+    public int difference(ITime time) {
+<span class="fc" id="L112">        Time t = (Time) time;</span>
+<span class="fc" id="L113">        return (int)Math.sqrt(Math.pow((this.gc.getTimeInMillis() - t.gc.getTimeInMillis()) / 60000, 2));</span>
+    }
+    
+    @Override
+    public String toString()
+    {
+<span class="fc" id="L119">        return getYear() + &quot;-&quot; + getMonth() + &quot;-&quot; + getDay() + &quot; &quot; + getHours() + &quot;:&quot; + getMinutes();</span>
+    }
+    
+    @Override
+    public boolean equals(Object other)
+    {
+<span class="fc" id="L125">        Time other2 = (Time) other;</span>
+
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if(this.getYear() != other2.getYear())</span>
+        {
+<span class="fc" id="L129">            return false;</span>
+        }
+        
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if(this.getMonth() != other2.getMonth())</span>
+        {
+<span class="fc" id="L134">            return false;</span>
+        }
+        
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        if(this.getDay() != other2.getDay())</span>
+        {
+<span class="fc" id="L139">            return false;</span>
+        }
+
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if(this.getHours() != other2.getHours())</span>
+        {
+<span class="fc" id="L144">            return false;</span>
+        }
+        
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if(this.getMinutes() != other2.getMinutes())</span>
+        {
+<span class="fc" id="L149">            return false;</span>
+        }
+
+<span class="fc" id="L152">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
