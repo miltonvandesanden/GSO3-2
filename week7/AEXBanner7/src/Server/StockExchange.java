@@ -6,7 +6,6 @@
 package Server;
 
 import java.rmi.RemoteException;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,22 +13,18 @@ import java.util.logging.Logger;
  *
  * @author Stefan
  */
-public class GenerateTask extends TimerTask
+public class StockExchange
 {
-    private IEffectenbeurs effectenbeurs;
-    
-    public GenerateTask(IEffectenbeurs effectenbeurs)
+
+    public static void main(String[] args)
     {
-        this.effectenbeurs = effectenbeurs;
-    }
-    @Override
-    public void run()
-    {
+        // Welcome message
+        System.out.println("SERVER USING REGISTRY");
+        
         try {
-            effectenbeurs.setStocks();
+            MockEffectenbeurs effectenbeurs = new MockEffectenbeurs(new Object());
         } catch (RemoteException ex) {
-            Logger.getLogger(GenerateTask.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StockExchange.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 }
