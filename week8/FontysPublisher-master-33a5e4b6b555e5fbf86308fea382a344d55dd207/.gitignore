@@ -1,0 +1,27 @@
+# NetBeans specific #
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# Class Files #
+*.class
+
+# Package Files #
+*.jar
+
+# Ignore Mac DS_Store files
+.DS_Store
+
+# Ignore zip files
+*.zip
+
+# Ignore .svn left over from earlier versions of the projects
+.svn
+
+# Ignore JaCoCo files
+.jacocoverage/
+
