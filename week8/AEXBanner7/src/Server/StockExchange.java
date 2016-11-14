@@ -5,10 +5,6 @@
  */
 package Server;
 
-import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Stefan

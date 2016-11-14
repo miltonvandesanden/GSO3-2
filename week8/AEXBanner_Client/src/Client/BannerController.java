@@ -1,22 +1,16 @@
 package Client;
 
-import Server.IEffectenbeurs;
-import Server.MockEffectenbeurs;
 import Utils.IFonds;
 import fontyspublisher.IRemotePropertyListener;
 import fontyspublisher.IRemotePublisherForListener;
-import fontyspublisher.RemotePublisher;
 import java.beans.PropertyChangeEvent;
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
