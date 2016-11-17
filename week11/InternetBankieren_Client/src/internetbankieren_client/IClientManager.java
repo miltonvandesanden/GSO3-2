@@ -12,8 +12,8 @@ package internetbankieren_client;
 public interface IClientManager {
     
     /**
-     *precondities: property is veranderd binnen de registry
-     *postconditie: account wordt gepolled
+     *@precondities: property is veranderd binnen de registry
+     *@postconditie: account wordt gepolled
      */
     public void propertyChanged();
     
