@@ -88,5 +88,6 @@ public class BannerController extends UnicastRemoteObject implements IRemoteProp
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
         this.fonds = (ArrayList<IFonds>)evt.getNewValue();
+        System.out.println("Hiero");
     }
 }
