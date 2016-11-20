@@ -17,7 +17,7 @@ import javafx.stage.Stage;
  *
  * @author Stefan
  */
-public class InternetBankieren_Client extends Application {
+public class ClientGUI extends Application {
     
     @Override
     public void start(Stage primaryStage) {
