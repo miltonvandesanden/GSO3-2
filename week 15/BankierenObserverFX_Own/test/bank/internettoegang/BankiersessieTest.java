@@ -79,7 +79,6 @@ public class BankiersessieTest
      * Test of isGeldig method, of class Bankiersessie.
      */
     @Test
-    (expected = InvalidSessionException.class)
     //@Ignore
     public void testIsGeldig2()
     {
@@ -94,7 +93,8 @@ public class BankiersessieTest
             Logger.getLogger(BankiersessieTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        instance.isGeldig();
+        boolean result = instance.isGeldig();
+        assertFalse(result);
     }
 
 
