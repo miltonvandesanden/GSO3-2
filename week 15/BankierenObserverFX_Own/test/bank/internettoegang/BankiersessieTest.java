@@ -5,94 +5,220 @@
  */
 package bank.internettoegang;
 
+import bank.bankieren.Bank;
 import bank.bankieren.IRekening;
+import bank.bankieren.Klant;
 import bank.bankieren.Money;
+import bank.bankieren.Rekening;
+import fontys.util.InvalidSessionException;
+import fontys.util.NumberDoesntExistException;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
  * @author Stefan
  */
-public class BankiersessieTest {
+public class BankiersessieTest
+{
+    private Bankiersessie instance;
+    private int sourceRekeningNr;
+    private int targetRekeningNr;
+    private Money money;
     
-    public BankiersessieTest() {
-    }
+    public BankiersessieTest(){}
     
     @BeforeClass
-    public static void setUpClass() {
-    }
+    public static void setUpClass(){}
     
     @AfterClass
-    public static void tearDownClass() {
-    }
+    public static void tearDownClass(){}
     
     @Before
-    public void setUp() {
+    public void setUp()
+    {
+        Bank bank = new Bank("Rabobank");
+        sourceRekeningNr = bank.openRekening("Milton", "Tilburg");
+        targetRekeningNr = bank.openRekening("Comrade Stefano", "Stalingrad");
+        money = new Money(100, Money.EURO);
+        
+        try
+        {
+            instance = new Bankiersessie(sourceRekeningNr, bank);
+        }
+        catch(RemoteException ex)
+        {
+            Logger.getLogger(BankiersessieTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @After
-    public void tearDown() {
-    }
+    public void tearDown(){}
 
     /**
      * Test of isGeldig method, of class Bankiersessie.
      */
     @Test
-    public void testIsGeldig() {
+    public void testIsGeldig()
+    {
         System.out.println("isGeldig");
-        Bankiersessie instance = null;
-        boolean expResult = false;
+        
         boolean result = instance.isGeldig();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(result);
+    }
+    
+     /**
+     * Test of isGeldig method, of class Bankiersessie.
+     */
+    @Test
+    (expected = InvalidSessionException.class)
+    //@Ignore
+    public void testIsGeldig2()
+    {
+        System.out.println("isGeldig");
+        
+        try
+        {
+            Thread.sleep(11000/*601000*/);
+        }
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(BankiersessieTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        instance.isGeldig();
+    }
+
+
+    /**
+     * Test of maakOver method, of class Bankiersessie.
+     * @throws java.lang.Exception
+     */
+    @Test
+    (expected = RuntimeException.class)
+    public void testMaakOver() throws Exception
+    {
+        System.out.println("maakOver");
+        instance.maakOver(sourceRekeningNr, money);
+    }
+    
+    /**
+     * Test of maakOver method, of class Bankiersessie.
+     * @throws java.lang.Exception
+     */
+    @Test
+    (expected = RuntimeException.class)
+    public void testMaakOver2() throws Exception
+    {
+        System.out.println("maakOver");
+        money = new Money(-100, Money.EURO);
+        instance.maakOver(targetRekeningNr, money);
+    }
+    
+    /**
+     * Test of maakOver method, of class Bankiersessie.
+     * @throws java.lang.Exception
+     */
+    @Test
+    (expected = RuntimeException.class)
+    public void testMaakOver3() throws Exception
+    {
+        System.out.println("maakOver");
+        money = new Money(0, Money.EURO);
+        instance.maakOver(targetRekeningNr, money);
+    }
+    
+    /**
+     * Test of maakOver method, of class Bankiersessie.
+     * @throws java.lang.Exception
+     */
+    @Test
+    (expected = NumberDoesntExistException.class)
+    public void testMaakOver4() throws Exception
+    {
+        System.out.println("maakOver");
+        instance.maakOver(25, money);
     }
 
     /**
      * Test of maakOver method, of class Bankiersessie.
+     * @throws java.lang.Exception
      */
     @Test
-    public void testMaakOver() throws Exception {
+    (expected = InvalidSessionException.class)
+    //@Ignore
+    public void testMaakOver5() throws Exception
+    {
         System.out.println("maakOver");
-        int bestemming = 0;
-        Money bedrag = null;
-        Bankiersessie instance = null;
-        boolean expResult = false;
-        boolean result = instance.maakOver(bestemming, bedrag);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        Thread.sleep(11000/*601000*/);
+        instance.maakOver(targetRekeningNr, money);
+    }
+    
+     /**
+     * Test of maakOver method, of class Bankiersessie.
+     * @throws java.lang.Exception
+     */
+    @Test
+    (expected = RuntimeException.class)
+    public void testMaakOver6() throws Exception
+    {
+        System.out.println("maakOver");
+        
+        money = new Money(-20000, Money.EURO);
+        
+        boolean result = instance.maakOver(targetRekeningNr, money);
+        assertFalse(result);
+    }
+
+     /**
+     * Test of maakOver method, of class Bankiersessie.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testMaakOver7() throws Exception
+    {
+        System.out.println("maakOver");
+        
+        boolean result = instance.maakOver(targetRekeningNr, money);
+        assertTrue(result);
     }
 
     /**
      * Test of getRekening method, of class Bankiersessie.
+     * @throws java.lang.Exception
      */
     @Test
-    public void testGetRekening() throws Exception {
+    (expected = InvalidSessionException.class)
+    //@Ignore
+    public void testGetRekening() throws Exception
+    {
         System.out.println("getRekening");
-        Bankiersessie instance = null;
-        IRekening expResult = null;
-        IRekening result = instance.getRekening();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of logUit method, of class Bankiersessie.
-     */
-    @Test
-    public void testLogUit() throws Exception {
-        System.out.println("logUit");
-        Bankiersessie instance = null;
-        instance.logUit();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        Thread.sleep(11000/*601000*/);
+        
+        instance.getRekening();
     }
     
+    /**
+     * Test of getRekening method, of class Bankiersessie.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testGetRekening2() throws Exception
+    {
+        System.out.println("getRekening");
+        
+        IRekening expResult = new Rekening(sourceRekeningNr, new Klant("Milton", "Tilburg"), Money.EURO);
+        IRekening result = instance.getRekening();
+        assertEquals(expResult, result);
+    }
 }

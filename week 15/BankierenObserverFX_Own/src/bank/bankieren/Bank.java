@@ -1,14 +1,13 @@
 package bank.bankieren;
 
 import fontys.util.*;
-import java.rmi.RemoteException;
 import java.util.*;
 
 public class Bank implements IBank
 {
     private static final long serialVersionUID = -8728841131739353765L;
     private final Map<Integer,IRekeningTbvBank> accounts;
-    private final Collection<IKlant> clients;
+    public final Collection<IKlant> clients;
     
     private int nieuwReknr;
     private final String name;
