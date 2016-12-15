@@ -34,7 +34,7 @@ public class BankiersessieTest
     private int targetRekeningNr;
     private Money money;
     
-    private int time = 11000; //600000;
+    private int time = /*11000;*/ 600000;
     
     public BankiersessieTest(){}
     
