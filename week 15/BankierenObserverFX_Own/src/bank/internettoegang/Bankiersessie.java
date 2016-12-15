@@ -9,6 +9,17 @@ import bank.bankieren.Money;
 
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
+import fontyspublisher.IRemotePropertyListener;
+import fontyspublisher.IRemotePublisherForDomain;
+import fontyspublisher.IRemotePublisherForListener;
+import fontyspublisher.RemotePublisher;
+import java.beans.PropertyChangeEvent;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Bankiersessie extends UnicastRemoteObject implements IBankiersessie
 {
@@ -16,12 +27,12 @@ public class Bankiersessie extends UnicastRemoteObject implements IBankiersessie
     private long laatsteAanroep;
     private final int reknr;
     private final IBank bank;
-
+    
     public Bankiersessie(int reknr, IBank bank) throws RemoteException
     {
         laatsteAanroep = System.currentTimeMillis();
         this.reknr = reknr;
-        this.bank = bank;
+        this.bank = bank;        
     }
 
     @Override

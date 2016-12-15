@@ -36,11 +36,13 @@ import javafx.stage.Stage;
  *
  * @author frankcoenen
  */
-public class BankierClient extends Application {
+public class BankierClient extends Application  {
     
     private Stage stage;
     private final double MINIMUM_WINDOW_WIDTH = 390.0;
     private final double MINIMUM_WINDOW_HEIGHT = 500.0;
+    
+    private BankierSessieController sessionController;
    // 
 
     @Override
@@ -67,9 +69,9 @@ public class BankierClient extends Application {
             props.load(in);
             String rmiBalie = props.getProperty("balie");
             in.close();
-
+            
             IBalie balie = (IBalie) Naming.lookup("rmi://" + rmiBalie);
-                        return balie;
+            return balie;
 
             } catch (Exception exc) {
                 exc.printStackTrace();
@@ -110,7 +112,7 @@ public class BankierClient extends Application {
       
       protected void gotoBankierSessie(IBalie balie, IBankiersessie sessie) {
         try {
-            BankierSessieController sessionController = (BankierSessieController) replaceSceneContent("BankierSessie.fxml");
+            sessionController = (BankierSessieController) replaceSceneContent("BankierSessie.fxml");
             sessionController.setApp(this, balie, sessie);
         } catch (Exception ex) {
             Logger.getLogger(BankierClient.class.getName()).log(Level.SEVERE, null, ex);

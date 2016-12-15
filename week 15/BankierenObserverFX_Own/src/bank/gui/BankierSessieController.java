@@ -7,12 +7,22 @@ package bank.gui;
 
 import bank.bankieren.IRekening;
 import bank.bankieren.Money;
+import bank.internettoegang.Bankiersessie;
 import bank.internettoegang.IBalie;
 import bank.internettoegang.IBankiersessie;
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
+import fontyspublisher.IRemotePropertyListener;
+import fontyspublisher.IRemotePublisherForListener;
+import java.beans.PropertyChangeEvent;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +39,8 @@ import javafx.scene.control.TextField;
  *
  * @author frankcoenen
  */
-public class BankierSessieController implements Initializable {
+public class BankierSessieController extends UnicastRemoteObject implements Initializable, IRemotePropertyListener
+{
 
     @FXML
     private Hyperlink hlLogout;
@@ -54,7 +65,8 @@ public class BankierSessieController implements Initializable {
     private IBalie balie;
     private IBankiersessie sessie;
 
-    public void setApp(BankierClient application, IBalie balie, IBankiersessie sessie) {
+    public void setApp(BankierClient application, IBalie balie, IBankiersessie sessie)
+    {
         this.balie = balie;
         this.sessie = sessie;
         this.application = application;
@@ -74,7 +86,20 @@ public class BankierSessieController implements Initializable {
             taMessage.setText("verbinding verbroken");
             Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+
+        try {
+            IRemotePublisherForListener listener = (IRemotePublisherForListener) Naming.lookup("saldoPublisher" + tfAccountNr.getText());
+            listener.subscribeRemoteListener(this, "saldo");
+        } catch (NotBoundException ex) {
+            Logger.getLogger(Bankiersessie.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException | MalformedURLException ex) {
+            Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
+    
+    public BankierSessieController() throws RemoteException{}
 
     /**
      * Initializes the controller class.
@@ -110,5 +135,11 @@ public class BankierSessieController implements Initializable {
             e1.printStackTrace();
             taMessage.setText(e1.getMessage());
         }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) throws RemoteException
+    {
+        tfBalance.setText(evt.getNewValue().toString());
     }
 }

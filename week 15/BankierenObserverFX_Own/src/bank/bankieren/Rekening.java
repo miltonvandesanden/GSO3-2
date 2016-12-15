@@ -1,5 +1,18 @@
 package bank.bankieren;
 
+import fontyspublisher.IRemotePublisherForDomain;
+import fontyspublisher.RemotePublisher;
+import java.net.MalformedURLException;
+import java.rmi.AccessException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Rekening implements IRekeningTbvBank
 {
     private static final long serialVersionUID = 7221569686169173632L;
@@ -9,6 +22,8 @@ public class Rekening implements IRekeningTbvBank
     private int nr;
     private IKlant eigenaar;
     private Money saldo;
+    
+    private IRemotePublisherForDomain publisher;
 
     /**
      * creatie van een bankrekening met saldo van 0.0<br>
@@ -38,6 +53,19 @@ public class Rekening implements IRekeningTbvBank
         this.nr = number;
         this.eigenaar = klant;
         this.saldo = saldo;
+        
+        try
+        {
+            publisher = new RemotePublisher();
+            publisher.registerProperty("saldo");
+            Naming.rebind("saldoPublisher" + this.nr, publisher);
+        }
+        catch (RemoteException ex)
+        {
+            Logger.getLogger(Rekening.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Rekening.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -85,7 +113,13 @@ public class Rekening implements IRekeningTbvBank
 
         if (isTransferPossible(bedrag))
         {
+            Money oldSaldo = saldo;
             saldo = Money.sum(saldo, bedrag);
+            try {
+                publisher.inform("saldo", oldSaldo, saldo);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Rekening.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return true;
         }
         

@@ -34,6 +34,8 @@ public class BankiersessieTest
     private int targetRekeningNr;
     private Money money;
     
+    private int time = /*11000;*/ 600000;
+    
     public BankiersessieTest(){}
     
     @BeforeClass
@@ -86,7 +88,7 @@ public class BankiersessieTest
         
         try
         {
-            Thread.sleep(11000/*601000*/);
+            Thread.sleep(time);
         }
         catch (InterruptedException ex)
         {
@@ -159,7 +161,7 @@ public class BankiersessieTest
     {
         System.out.println("maakOver");
         
-        Thread.sleep(11000/*601000*/);
+        Thread.sleep(time);
         instance.maakOver(targetRekeningNr, money);
     }
     
@@ -203,7 +205,7 @@ public class BankiersessieTest
     {
         System.out.println("getRekening");
         
-        Thread.sleep(11000/*601000*/);
+        Thread.sleep(time);
         
         instance.getRekening();
     }
