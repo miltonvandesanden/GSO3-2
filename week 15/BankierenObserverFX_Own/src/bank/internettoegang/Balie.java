@@ -66,6 +66,10 @@ public class Balie extends UnicastRemoteObject implements IBalie {
 		}
 		return s.toString();
 	}
+        
+        public void setLoginAccount(HashMap<String, ILoginAccount> loginAccounts){
+            this.loginaccounts = loginAccounts;
+        }
 
 
 }

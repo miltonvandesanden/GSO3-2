@@ -129,30 +129,12 @@ public class BankTest
      */
     ///TODO: this
     @Test
-    (expected = NumberDoesntExistException.class)
-    public void testMaakOver3() throws Exception
-    {
-        System.out.println("testMaakOver");
-        
-        int source = 300;
-        int destination = 400;
-        Money money = new Money(100, Money.EURO);
-        
-        instance.maakOver(source, destination, money);
-    }
-
-    /**
-     * Test of maakOver method, of class Bank.
-     * @throws java.lang.Exception
-     */
-    ///TODO: this
-    @Test
     (expected = RuntimeException.class)
     public void testMaakOver4() throws Exception
     {
         System.out.println("testMaakOver");
         
-        int source = 300;
+        int source = instance.openRekening("Klant1", "Tilburg");
         int destination = source;
         Money money = new Money(100, Money.EURO);
         
@@ -201,14 +183,13 @@ public class BankTest
      */
     ///TODO: this
     @Test
-    (expected = RuntimeException.class)
     public void testMaakOver7() throws Exception
     {
         System.out.println("testMaakOver");
         
         int source = instance.openRekening("Klant1", "Tilburg");
         int destination = instance.openRekening("Klant2", "Tilburg");
-        instance.maakOver(source, destination, new Money(-999, Money.EURO));
+        instance.maakOver(source, destination, new Money(9999, Money.EURO));
         Money money = new Money(400, Money.EURO);
         
         assertFalse(instance.maakOver(source, destination, money));
@@ -220,7 +201,6 @@ public class BankTest
      */
     ///TODO: this
     @Test
-    (expected = RuntimeException.class)
     public void testMaakOver8() throws Exception
     {
         System.out.println("testMaakOver");

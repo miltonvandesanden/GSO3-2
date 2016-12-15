@@ -5,6 +5,9 @@
  */
 package bank.internettoegang;
 
+import bank.bankieren.Bank;
+import java.rmi.RemoteException;
+import java.util.HashMap;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,6 +20,12 @@ import static org.junit.Assert.*;
  * @author Stefan
  */
 public class BalieTest {
+     
+    Balie instance=null;
+    Bank bankinstance=null;
+    int rekeningNo=0;
+    HashMap<String, ILoginAccount> loginaccounts;
+    LoginAccount loginAccountInstance = null;
     
     public BalieTest() {
     }
@@ -30,7 +39,11 @@ public class BalieTest {
     }
     
     @Before
-    public void setUp() {
+    public void setUp() throws RemoteException {
+        bankinstance = new Bank("Rabobank");
+        instance = new Balie(bankinstance);
+        rekeningNo = 54645873;
+        loginaccounts = new HashMap<String, ILoginAccount>();
     }
     
     @After
@@ -41,33 +54,101 @@ public class BalieTest {
      * Test of openRekening method, of class Balie.
      */
     @Test
-    public void testOpenRekening() {
+    public void testOpenRekeningNoName(){
         System.out.println("openRekening");
         String naam = "";
-        String plaats = "";
-        String wachtwoord = "";
-        Balie instance = null;
-        String expResult = "";
+        String plaats = "Sliedrecht";
+        String wachtwoord = "Hansel";
         String result = instance.openRekening(naam, plaats, wachtwoord);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertNull(result);
+    }
+    
+    @Test
+    public void testOpenRekeningNoPlace() {
+        System.out.println("openRekening");
+        String naam = "Gretel";
+        String plaats = "";
+        String wachtwoord = "Hansel";
+        String result = instance.openRekening(naam, plaats, wachtwoord);
+        assertNull(result);
     }
 
+    @Test
+    public void testOpenRekeningPasswordNotCorrect() {
+        System.out.println("openRekening");
+        String naam = "Gretel";
+        String plaats = "Sliedrecht";
+        String wachtwoord = "HanselUndGretel"; //password langer dan 8
+        String result = instance.openRekening(naam, plaats, wachtwoord);
+        assertNull(result);
+    }
+    
+    @Test
+    public void testOpenRekening() {
+        System.out.println("openRekening");
+        String naam = "Gretel";
+        String plaats = "Sliedrecht";
+        String wachtwoord = "Hansel";
+        int expectedResult = 8;
+        String result = instance.openRekening(naam, plaats, wachtwoord);
+        assertEquals(expectedResult, result.length());
+    }
     /**
      * Test of logIn method, of class Balie.
      */
     @Test
-    public void testLogIn() throws Exception {
+    public void testLogInNoName() throws Exception {
         System.out.println("logIn");
         String accountnaam = "";
-        String wachtwoord = "";
-        Balie instance = null;
-        IBankiersessie expResult = null;
+        String wachtwoord = "password";
+       
+        loginAccountInstance = new LoginAccount(accountnaam, wachtwoord, rekeningNo);
+        loginaccounts.put(accountnaam, loginAccountInstance);
+        
+        instance.setLoginAccount(loginaccounts);
+        
+        IBankiersessie expectedSession = new Bankiersessie(rekeningNo, bankinstance);
+        
         IBankiersessie result = instance.logIn(accountnaam, wachtwoord);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertNull(result);
     }
     
+    @Test
+    public void testLogInNoPassword() throws Exception {
+        System.out.println("logIn");
+        String accountnaam = "Hansel";
+        String wachtwoord = "";
+       
+        loginAccountInstance = new LoginAccount(accountnaam, "welEenWactwoord", rekeningNo);
+        loginaccounts.put(accountnaam, loginAccountInstance);
+        
+        instance.setLoginAccount(loginaccounts);
+        
+        IBankiersessie expectedSession = new Bankiersessie(rekeningNo, bankinstance);
+        
+        
+        IBankiersessie result = instance.logIn(accountnaam, wachtwoord);
+        
+        assertNull(result);
+    }
+    
+    @Test
+    public void testLogInCorrect() throws Exception {
+        System.out.println("logIn");
+        String accountnaam = "Hansel";
+        String wachtwoord = "password";
+       
+        loginAccountInstance = new LoginAccount(accountnaam, wachtwoord, rekeningNo);
+        loginaccounts.put(accountnaam, loginAccountInstance);
+        
+        instance.setLoginAccount(loginaccounts);
+        
+        IBankiersessie expectedSession = new Bankiersessie(rekeningNo, bankinstance);
+        
+        
+        IBankiersessie result = instance.logIn(accountnaam, wachtwoord);
+        
+        assertEquals(result , expectedSession);
+    }
 }
