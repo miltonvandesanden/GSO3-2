@@ -64,6 +64,8 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
     private BankierClient application;
     private IBalie balie;
     private IBankiersessie sessie;
+    
+    private IRemotePublisherForListener listener;
 
     public void setApp(BankierClient application, IBalie balie, IBankiersessie sessie)
     {
@@ -79,6 +81,7 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
                     + rekening.getEigenaar().getPlaats();
             tfNameCity.setText(eigenaar);
         } catch (InvalidSessionException ex) {
+            disconnect();
             taMessage.setText("bankiersessie is verlopen");
             Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -89,7 +92,7 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
         
 
         try {
-            IRemotePublisherForListener listener = (IRemotePublisherForListener) Naming.lookup("saldoPublisher" + tfAccountNr.getText());
+            listener = (IRemotePublisherForListener) Naming.lookup("saldoPublisher" + tfAccountNr.getText());
             listener.subscribeRemoteListener(this, "saldo");
         } catch (NotBoundException ex) {
             Logger.getLogger(Bankiersessie.class.getName()).log(Level.SEVERE, null, ex);
@@ -97,6 +100,18 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
             Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    
+    public void disconnect()
+    {
+        try {
+            listener.unsubscribeRemoteListener(this, "saldo");
+            Naming.unbind("saldoPublisher" + tfAccountNr.getText());
+            sessie.logUit();
+        } catch (RemoteException | NotBoundException | MalformedURLException ex) {
+            Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
     public BankierSessieController() throws RemoteException{}
@@ -110,12 +125,8 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
 
     @FXML
     private void logout(ActionEvent event) {
-        try {
-            sessie.logUit();
-            application.gotoLogin(balie, "");
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        disconnect();
+        application.gotoLogin(balie, "");
     }
 
     @FXML
