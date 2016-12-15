@@ -102,8 +102,8 @@ public class BalieTest {
         String accountnaam = "";
         String wachtwoord = "password";
        
-        loginAccountInstance = new LoginAccount(accountnaam, wachtwoord, rekeningNo);
-        loginaccounts.put(accountnaam, loginAccountInstance);
+        loginAccountInstance = new LoginAccount("validAccountNaam", wachtwoord, rekeningNo);
+        loginaccounts.put("validAccountNaam", loginAccountInstance);
         
         instance.setLoginAccount(loginaccounts);
         
@@ -120,7 +120,7 @@ public class BalieTest {
         String accountnaam = "Hansel";
         String wachtwoord = "";
        
-        loginAccountInstance = new LoginAccount(accountnaam, "welEenWactwoord", rekeningNo);
+        loginAccountInstance = new LoginAccount(accountnaam, "validWactwoord", rekeningNo);
         loginaccounts.put(accountnaam, loginAccountInstance);
         
         instance.setLoginAccount(loginaccounts);
