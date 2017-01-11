@@ -58,7 +58,19 @@ public interface IBank extends Remote
      */
     String getName() throws RemoteException;
     
+    /**
+     *
+     * @return listwith the names of all banks that are subscribed to the CentralBank
+     * @throws RemoteException
+     */
     public List<String> getHostedBanks() throws RemoteException;
     
-    public boolean maakOverTarget(int destination, Money money) throws NumberDoesntExistException, RemoteException;
+    /**
+     * changes the saldo of the account with rekeningnr destination by the amount of money in money
+     * @param destination the target account number where the money will be transferred to
+     * @param money the amount of money that will be transferred to the target account as defined by destination
+     * @return 
+     * @throws RemoteException
+     */
+    public boolean maakOverTarget(int destination, Money money) throws RemoteException;
 }

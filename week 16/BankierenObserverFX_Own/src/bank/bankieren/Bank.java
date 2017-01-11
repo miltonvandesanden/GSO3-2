@@ -151,7 +151,7 @@ public class Bank extends UnicastRemoteObject implements IBank
     }
     
     @Override
-    public boolean maakOverTarget(int destination, Money money) throws NumberDoesntExistException
+    public boolean maakOverTarget(int destination, Money money)
     {
         boolean success = false;
         
