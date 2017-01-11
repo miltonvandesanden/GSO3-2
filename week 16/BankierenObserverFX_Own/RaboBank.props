@@ -1,2 +1,4 @@
-#Thu Dec 15 22:53:21 CET 2016
-balie=192.168.192.57\:1099/RaboBank
+#Wed Jan 11 15:11:57 CET 2017
+bank=RaboBank
+port=1100
+ip=192.168.192.57

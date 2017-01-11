@@ -26,10 +26,14 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -58,12 +62,14 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
     @FXML
     private Button btTransfer;
     @FXML
-
     private TextArea taMessage;
+    @FXML
+    private ComboBox cbSelectBank;
 
     private BankierClient application;
     private IBalie balie;
     private IBankiersessie sessie;
+    String  bankNaam;
     
     private IRemotePublisherForListener listener;
 
@@ -80,6 +86,8 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
             String eigenaar = rekening.getEigenaar().getNaam() + " te "
                     + rekening.getEigenaar().getPlaats();
             tfNameCity.setText(eigenaar);
+            
+            cbSelectBank.getItems().addAll(balie.getHostedBanks());
         } catch (InvalidSessionException ex) {
             disconnect();
             taMessage.setText("bankiersessie is verlopen");
@@ -121,6 +129,14 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        cbSelectBank.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue ov, Object t, Object t1) {
+                bankNaam = (String) ov.getValue();
+            }
+        }
+        );
+        
     }
 
     @FXML
@@ -138,8 +154,15 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
                 taMessage.setText("can't transfer money to your own account");
             }
             long centen = (long) (Double.parseDouble(tfAmount.getText()) * 100);
-            sessie.maakOver(to, new Money(centen, Money.EURO));
-        } catch (RemoteException e1) {
+            if(bankNaam!= null)
+            {
+                if(!bankNaam.isEmpty())
+                {
+                    sessie.maakOver(to, new Money(centen, Money.EURO), bankNaam);
+                }
+            }
+        } 
+        catch (RemoteException e1) {
             e1.printStackTrace();
             taMessage.setText("verbinding verbroken");
         } catch (NumberDoesntExistException | InvalidSessionException e1) {

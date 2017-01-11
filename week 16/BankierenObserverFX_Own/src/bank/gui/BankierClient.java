@@ -21,6 +21,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,10 +69,15 @@ public class BankierClient extends Application  {
             FileInputStream in = new FileInputStream(bankName+".props");
             Properties props = new Properties();
             props.load(in);
-            String rmiBalie = props.getProperty("balie");
+            String filePort = props.getProperty("port");
+            String fileBankName = props.getProperty("bank");
+            String fileIP = props.getProperty("ip");
             in.close();
             
-            IBalie balie = (IBalie) Naming.lookup("rmi://" + rmiBalie);
+            //lookup met property ip port en name
+            //IBalie balie = (IBalie) Naming.lookup("rmi://" + rmiBalie);
+            Registry registry = LocateRegistry.getRegistry(fileIP, Integer.parseInt(filePort));
+            IBalie balie = (IBalie) registry.lookup(fileBankName);
             return balie;
 
             } catch (Exception exc) {

@@ -1,0 +1,45 @@
+<html><head>
+  <SCRIPT src="./web-files/dtjava.js"></SCRIPT>
+<script>
+    function launchApplication(jnlpfile) {
+        dtjava.launch(            {
+                url : 'BankierenObserverFX_Own.jnlp',
+                jnlp_content : 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxqbmxwIHNwZWM9IjEuMCIgeG1sbnM6amZ4PSJodHRwOi8vamF2YWZ4LmNvbSIgaHJlZj0iQmFua2llcmVuT2JzZXJ2ZXJGWF9Pd24uam5scCI+DQogIDxpbmZvcm1hdGlvbj4NCiAgICA8dGl0bGU+QmFua2llcmVuT2JzZXJ2ZXJGWF9Pd248L3RpdGxlPg0KICAgIDx2ZW5kb3I+ZnJhbmtjb2VuZW48L3ZlbmRvcj4NCiAgICA8ZGVzY3JpcHRpb24+bnVsbDwvZGVzY3JpcHRpb24+DQogICAgPG9mZmxpbmUtYWxsb3dlZC8+DQogIDwvaW5mb3JtYXRpb24+DQogIDxyZXNvdXJjZXM+DQogICAgPGoyc2UgdmVyc2lvbj0iMS42KyIgaHJlZj0iaHR0cDovL2phdmEuc3VuLmNvbS9wcm9kdWN0cy9hdXRvZGwvajJzZSIvPg0KICAgIDxqYXIgaHJlZj0iQmFua2llcmVuT2JzZXJ2ZXJGWF9Pd24uamFyIiBzaXplPSI0Nzk4MCIgZG93bmxvYWQ9ImVhZ2VyIiAvPg0KICAgIDxqYXIgaHJlZj0ibGliXEZvbnR5c1B1Ymxpc2hlci5qYXIiIHNpemU9IjE1ODg5IiBkb3dubG9hZD0iZWFnZXIiIC8+DQogICAgPGphciBocmVmPSJsaWJcanVuaXQtNC4xMi5qYXIiIHNpemU9IjM0MzgxMiIgZG93bmxvYWQ9ImVhZ2VyIiAvPg0KICA8L3Jlc291cmNlcz4NCjxzZWN1cml0eT4NCiAgPGFsbC1wZXJtaXNzaW9ucy8+DQo8L3NlY3VyaXR5Pg0KICA8YXBwbGV0LWRlc2MgIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBtYWluLWNsYXNzPSJjb20uamF2YWZ4Lm1haW4uTm9KYXZhRlhGYWxsYmFjayIgIG5hbWU9IkJhbmtpZXJlbk9ic2VydmVyRlhfT3duIiA+DQogICAgPHBhcmFtIG5hbWU9InJlcXVpcmVkRlhWZXJzaW9uIiB2YWx1ZT0iOC4wKyIvPg0KICA8L2FwcGxldC1kZXNjPg0KICA8amZ4OmphdmFmeC1kZXNjICB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgbWFpbi1jbGFzcz0iYmFuay5ndWkuQmFua2llckNsaWVudCIgIG5hbWU9IkJhbmtpZXJlbk9ic2VydmVyRlhfT3duIiAvPg0KICA8dXBkYXRlIGNoZWNrPSJhbHdheXMiLz4NCjwvam5scD4NCg=='
+            },
+            {
+                javafx : '8.0+'
+            },
+            {}
+        );
+        return false;
+    }
+</script>
+
+<script>
+    function javafxEmbedbank.gui() {
+        dtjava.embed(
+            {
+                id : 'bank.gui',
+                url : 'BankierenObserverFX_Own.jnlp',
+                placeholder : 'javafx-app-placeholder',
+                width : '800',
+                height : '600',
+                jnlp_content : 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxqbmxwIHNwZWM9IjEuMCIgeG1sbnM6amZ4PSJodHRwOi8vamF2YWZ4LmNvbSIgaHJlZj0iQmFua2llcmVuT2JzZXJ2ZXJGWF9Pd24uam5scCI+DQogIDxpbmZvcm1hdGlvbj4NCiAgICA8dGl0bGU+QmFua2llcmVuT2JzZXJ2ZXJGWF9Pd248L3RpdGxlPg0KICAgIDx2ZW5kb3I+ZnJhbmtjb2VuZW48L3ZlbmRvcj4NCiAgICA8ZGVzY3JpcHRpb24+bnVsbDwvZGVzY3JpcHRpb24+DQogICAgPG9mZmxpbmUtYWxsb3dlZC8+DQogIDwvaW5mb3JtYXRpb24+DQogIDxyZXNvdXJjZXM+DQogICAgPGoyc2UgdmVyc2lvbj0iMS42KyIgaHJlZj0iaHR0cDovL2phdmEuc3VuLmNvbS9wcm9kdWN0cy9hdXRvZGwvajJzZSIvPg0KICAgIDxqYXIgaHJlZj0iQmFua2llcmVuT2JzZXJ2ZXJGWF9Pd24uamFyIiBzaXplPSI0Nzk4MCIgZG93bmxvYWQ9ImVhZ2VyIiAvPg0KICAgIDxqYXIgaHJlZj0ibGliXEZvbnR5c1B1Ymxpc2hlci5qYXIiIHNpemU9IjE1ODg5IiBkb3dubG9hZD0iZWFnZXIiIC8+DQogICAgPGphciBocmVmPSJsaWJcanVuaXQtNC4xMi5qYXIiIHNpemU9IjM0MzgxMiIgZG93bmxvYWQ9ImVhZ2VyIiAvPg0KICA8L3Jlc291cmNlcz4NCjxzZWN1cml0eT4NCiAgPGFsbC1wZXJtaXNzaW9ucy8+DQo8L3NlY3VyaXR5Pg0KICA8YXBwbGV0LWRlc2MgIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBtYWluLWNsYXNzPSJjb20uamF2YWZ4Lm1haW4uTm9KYXZhRlhGYWxsYmFjayIgIG5hbWU9IkJhbmtpZXJlbk9ic2VydmVyRlhfT3duIiA+DQogICAgPHBhcmFtIG5hbWU9InJlcXVpcmVkRlhWZXJzaW9uIiB2YWx1ZT0iOC4wKyIvPg0KICA8L2FwcGxldC1kZXNjPg0KICA8amZ4OmphdmFmeC1kZXNjICB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgbWFpbi1jbGFzcz0iYmFuay5ndWkuQmFua2llckNsaWVudCIgIG5hbWU9IkJhbmtpZXJlbk9ic2VydmVyRlhfT3duIiAvPg0KICA8dXBkYXRlIGNoZWNrPSJhbHdheXMiLz4NCjwvam5scD4NCg=='
+            },
+            {
+                javafx : '8.0+'
+            },
+            {}
+        );
+    }
+    <!-- Embed FX application into web page once page is loaded -->
+    dtjava.addOnloadCallback(javafxEmbedbank.gui);
+</script>
+
+</head><body>
+<h2>Test page for <b>BankierenObserverFX_Own</b></h2>
+  <b>Webstart:</b> <a href='BankierenObserverFX_Own.jnlp' onclick="return launchApplication('BankierenObserverFX_Own.jnlp');">click to launch this app as webstart</a><br><hr><br>
+
+  <!-- Applet will be inserted here -->
+  <div id='javafx-app-placeholder'></div>
+</body></html>

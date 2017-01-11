@@ -7,8 +7,11 @@ package bank.centralBank;
 
 import bank.bankieren.IBank;
 import bank.bankieren.Money;
+import fontys.util.NumberDoesntExistException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -52,19 +55,54 @@ public class CentralBank extends UnicastRemoteObject implements ICentralBank
     }
     
     @Override
-    public boolean subscribeBank(String afk, String ip, int port) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean subscribeBank(String name, String ip, int port) throws RemoteException
+    {
+        try {
+            banks.add((IBank)LocateRegistry.getRegistry(ip, port).lookup(name));
+            return true;
+        } catch (NotBoundException | AccessException ex) {
+            Logger.getLogger(CentralBank.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 
     @Override
-    public boolean createTransaction(String source, String target, Money amount) throws RemoteException {
+    public boolean createTransaction(int source, int target, Money amount, String bank) throws RemoteException
+    {   
+        if(bank != null)
+        {
+            if(!bank.isEmpty())
+            {
+                for(IBank bank2 : banks)
+                {
+                    if(bank2.getName().equals(bank))
+                    {
+                        try {
+                            return bank2.maakOverTarget(target, amount);
+                        } catch (NumberDoesntExistException ex) {
+                            Logger.getLogger(CentralBank.class.getName()).log(Level.SEVERE, null, ex);
+                            return false;
+                        }
+                    }
+                }
+            }
+            
+            return false;
+        }
         
-        //if(
-        //lookup in serverregistry ip for that bank
-        //connect to registry
-        //get IBank from registry
-        //if banks doesnt contain targetbank
-        //get targetbank from registy
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
+    }
+
+    @Override
+    public List<String> getHostedBanks() throws RemoteException
+    {
+        List<String> names = new ArrayList<>();
+        
+        for(IBank bank : banks)
+        {
+            names.add(bank.getName());
+        }
+        
+        return names;
     }
 }

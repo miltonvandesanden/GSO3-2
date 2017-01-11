@@ -8,6 +8,7 @@ package bank.centralBank;
 import bank.bankieren.Money;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  *
@@ -16,5 +17,6 @@ import java.rmi.RemoteException;
 public interface ICentralBank extends Remote
 {
     public boolean subscribeBank(String afk, String ip, int port) throws RemoteException;
-    public boolean createTransaction(String source, String target, Money amount) throws RemoteException;
+    public boolean createTransaction(int source, int target, Money amount, String bank) throws RemoteException;
+    public List<String> getHostedBanks() throws RemoteException;
 }

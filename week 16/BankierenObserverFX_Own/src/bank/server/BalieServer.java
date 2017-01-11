@@ -12,7 +12,10 @@ import bank.internettoegang.IBalie;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,19 +58,46 @@ public class BalieServer extends Application {
     public boolean startBalie(String nameBank) {
             
             FileOutputStream out = null;
+            int port = 0;
             try {
                 this.nameBank = nameBank;
                 String address = java.net.InetAddress.getLocalHost().getHostAddress();
-                int port = 1099;
+                if(nameBank == "RaboBank")
+                {
+                    port = 1100;
+                }
+                if(nameBank == "ING")
+                {
+                    port = 1102;
+                }
+                if(nameBank == "SNS")
+                {
+                    port = 1104;
+                }
+                if(nameBank == "ABN AMRO")
+                {
+                    port = 1106;
+                }
+                if(nameBank == "ASN")
+                {
+                    port = 1108;
+                }
                 Properties props = new Properties();
-                String rmiBalie = address + ":" + port + "/" + nameBank;
-                props.setProperty("balie", rmiBalie);
+                //port +1
+                //String rmiBalie = address + ":" + port + "/" + nameBank;
+                String rmiBalie = port+"";
+                String bank = nameBank;
+                String ip = InetAddress.getLocalHost().getHostAddress();
+                props.setProperty("port", rmiBalie);
+                props.setProperty("bank", bank);
+                props.setProperty("ip", ip);
                 out = new FileOutputStream(nameBank + ".props");
                 props.store(out, null);
                 out.close();
-                java.rmi.registry.LocateRegistry.createRegistry(port);
-                IBalie balie = new Balie(new Bank(nameBank));
-                Naming.rebind(nameBank, balie);
+                Registry registry = LocateRegistry.createRegistry(port);
+                IBalie balie = new Balie(new Bank(nameBank, port));
+                //Naming.rebind(nameBank, balie);
+                registry.rebind(nameBank, balie);
                
                 return true;
 

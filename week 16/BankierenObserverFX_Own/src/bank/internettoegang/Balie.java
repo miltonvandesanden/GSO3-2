@@ -4,6 +4,8 @@ import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import bank.bankieren.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Balie extends UnicastRemoteObject implements IBalie {
 
@@ -21,25 +23,33 @@ public class Balie extends UnicastRemoteObject implements IBalie {
 	}
 
 	public String openRekening(String naam, String plaats, String wachtwoord) {
-		if (naam.equals(""))
-			return null;
-		if (plaats.equals(""))
-			return null;
-
-		if (wachtwoord.length() < 4 || wachtwoord.length() > 8)
-			return null;
-
-		int nr = bank.openRekening(naam, plaats);
-		if (nr == -1)
-			return null;
-
-		String accountname = generateId(8);
-		while (loginaccounts.containsKey(accountname))
-			accountname = generateId(8);
-		loginaccounts.put(accountname, new LoginAccount(accountname,
-				wachtwoord, nr));
-
-		return accountname;
+            String accountname = null;
+            
+            try {
+                if (naam.equals(""))
+                    return null;
+                if (plaats.equals(""))
+                    return null;
+                
+                if (wachtwoord.length() < 4 || wachtwoord.length() > 8)
+                    return null;
+                
+                int nr = bank.openRekening(naam, plaats);
+                if (nr == -1)
+                    return null;
+                
+                accountname = generateId(8);
+                while (loginaccounts.containsKey(accountname))
+                    accountname = generateId(8);
+                loginaccounts.put(accountname, new LoginAccount(accountname,
+                        wachtwoord, nr));
+            } catch (RemoteException ex) {
+                Logger.getLogger(Balie.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            finally
+            {
+                return accountname;
+            }
 	}
 
 	public IBankiersessie logIn(String accountnaam, String wachtwoord)
@@ -70,6 +80,18 @@ public class Balie extends UnicastRemoteObject implements IBalie {
         public void setLoginAccount(HashMap<String, ILoginAccount> loginAccounts){
             this.loginaccounts = loginAccounts;
         }
+
+    @Override
+    public List<String> getHostedBanks() throws RemoteException
+    {
+            try {
+                return bank.getHostedBanks();
+            } catch (RemoteException ex) {
+                Logger.getLogger(Balie.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            return null;
+    }
 
 
 }

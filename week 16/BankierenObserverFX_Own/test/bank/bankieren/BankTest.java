@@ -6,6 +6,9 @@
 package bank.bankieren;
 
 import fontys.util.NumberDoesntExistException;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -32,7 +35,11 @@ public class BankTest
     @Before
     public void setUp()
     {
-        instance = new Bank("Rabobank");
+        try {
+            instance = new Bank("Rabobank");
+        } catch (RemoteException ex) {
+            Logger.getLogger(BankTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @After
@@ -44,47 +51,63 @@ public class BankTest
      */
     @Test
     public void testOpenRekeningGeenNaam() {
-        System.out.println("testOpenRekeningGeenNaam");
-        String name = "";
-        String city = "Waspik";
-        int expResult = -1;
-        int result = instance.openRekening(name, city);
-        assertEquals(expResult, result);
+        try {
+            System.out.println("testOpenRekeningGeenNaam");
+            String name = "";
+            String city = "Waspik";
+            int expResult = -1;
+            int result = instance.openRekening(name, city);
+            assertEquals(expResult, result);
+        } catch (RemoteException ex) {
+            Logger.getLogger(BankTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Test
     public void testOpenRekeningGeenStad() {
-        System.out.println("testOpenRekeningGeenStad");
-        String name = "Hans";
-        String city = "";
-        int expResult = -1;
-        int result = instance.openRekening(name, city);
-        assertEquals(expResult, result);
+        try {
+            System.out.println("testOpenRekeningGeenStad");
+            String name = "Hans";
+            String city = "";
+            int expResult = -1;
+            int result = instance.openRekening(name, city);
+            assertEquals(expResult, result);
+        } catch (RemoteException ex) {
+            Logger.getLogger(BankTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Test
     public void testOpenRekeningStadEnNaam() {
-        System.out.println("testOpenRekeningStadEnNaam");
-        String name = "Hans";
-        String city = "Waspik";
-        int expResult = 100000000;
-        int result = instance.openRekening(name, city);
-        assertEquals(expResult, result);
+        try {
+            System.out.println("testOpenRekeningStadEnNaam");
+            String name = "Hans";
+            String city = "Waspik";
+            int expResult = 100000000;
+            int result = instance.openRekening(name, city);
+            assertEquals(expResult, result);
+        } catch (RemoteException ex) {
+            Logger.getLogger(BankTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     /**
      * Test of getRekening method, of class Bank.
      */
     @Test
     public void testGetRekening() {
-        System.out.println("testGetRekening");
-        
-        int rekeningnr = instance.openRekening("Hanse", "Waspik");
-        IRekening result = instance.getRekening(rekeningnr);
-        
-        
-        IRekening expResult = new Rekening(100000000, new Klant("Hans", "Waspik"), Money.EURO);
-        
-        assertEquals(expResult, result);
+        try {
+            System.out.println("testGetRekening");
+            
+            int rekeningnr = instance.openRekening("Hanse", "Waspik");
+            IRekening result = instance.getRekening(rekeningnr);
+            
+            
+            IRekening expResult = new Rekening(100000000, new Klant("Hans", "Waspik"), Money.EURO);
+            
+            assertEquals(expResult, result);
+        } catch (RemoteException ex) {
+            Logger.getLogger(BankTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -217,10 +240,14 @@ public class BankTest
      */
     @Test
     public void testGetName() {
-        System.out.println("testGetName");
-        
-        String expResult = "Rabobank";
-        String result = instance.getName();
-        assertEquals(expResult, result);
+        try {
+            System.out.println("testGetName");
+            
+            String expResult = "Rabobank";
+            String result = instance.getName();
+            assertEquals(expResult, result);
+        } catch (RemoteException ex) {
+            Logger.getLogger(BankTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

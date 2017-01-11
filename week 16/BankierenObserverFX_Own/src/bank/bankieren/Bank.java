@@ -24,32 +24,31 @@ public class Bank extends UnicastRemoteObject implements IBank
     private String name;
     
     private String ip;
-    private final int PORT = 1100;
     private Registry registry;
     
-    private final String SERVERIP = "localhost";
-    private final int SERVERPORT = 1099;
+    private final String CENTRALIP = "localhost";
+    private final int CENTRALPORT = 1099;
     private ICentralBank centralBank;
 
     public Bank() throws RemoteException{}
     
-    public Bank(String name) throws RemoteException
+    public Bank(String name, int portnr) throws RemoteException
     {
         try
         {
             ip = InetAddress.getLocalHost().getHostAddress();
             
-            registry = LocateRegistry.createRegistry(PORT);
+            registry = LocateRegistry.createRegistry(portnr + 1);
             registry.rebind(name, this);
             
-            System.out.println("-----" + System.lineSeparator() + "Bank " + name + " Hosted" + System.lineSeparator() + ip +  System.lineSeparator() + PORT + System.lineSeparator() + "-----");
+            System.out.println("-----" + System.lineSeparator() + "Bank " + name + " Hosted" + System.lineSeparator() + ip +  System.lineSeparator() + portnr + 1 + System.lineSeparator() + "-----");
             
-            Registry serverRegistry = LocateRegistry.getRegistry(SERVERIP, SERVERPORT);
-            centralBank = (ICentralBank) serverRegistry.lookup("centralbank");
-            //put entry in registry with key bank name, value bank ip
-            serverRegistry.rebind(name, this);
+            Registry serverRegistry = LocateRegistry.getRegistry(CENTRALIP, CENTRALPORT);
+            centralBank = (ICentralBank) serverRegistry.lookup("centralBank");
             
-            System.out.println("-----" + System.lineSeparator() + "connected to CentralBank at" + System.lineSeparator() + "IP: " + SERVERIP + System.lineSeparator() + "Port: " + SERVERPORT + System.lineSeparator() + "-----");
+            centralBank.subscribeBank(name, ip, portnr + 1);
+            
+            System.out.println("-----" + System.lineSeparator() + "connected to CentralBank at" + System.lineSeparator() + "IP: " + CENTRALIP + System.lineSeparator() + "Port: " + CENTRALPORT + System.lineSeparator() + "-----");
         }
         catch (UnknownHostException | RemoteException | NotBoundException ex)
         {
@@ -63,7 +62,7 @@ public class Bank extends UnicastRemoteObject implements IBank
     }
 
     @Override
-    public synchronized int openRekening(String name, String city)
+    public synchronized int openRekening(String name, String city) throws RemoteException
     {
         if (name.isEmpty() || city.isEmpty())
         {
@@ -79,7 +78,7 @@ public class Bank extends UnicastRemoteObject implements IBank
         return nieuwReknr-1;
     }
 
-    private IKlant getKlant(String name, String city)
+    private IKlant getKlant(String name, String city) throws RemoteException
     {
         for (IKlant k : clients)
         {
@@ -95,15 +94,15 @@ public class Bank extends UnicastRemoteObject implements IBank
     }
 
     @Override
-    public IRekening getRekening(int nr)
+    public IRekening getRekening(int nr) throws RemoteException
     {
         return accounts.get(nr);
     }
     
     @Override
-    public boolean maakOver(int source, int destination, Money money) throws NumberDoesntExistException
+    public boolean maakOver(int source, int destination, Money money, String bankName) throws NumberDoesntExistException, RemoteException
     {
-        if (source == destination)
+        if (source == destination && bankName.equals(name))
         {
             throw new RuntimeException("cannot transfer money to your own account");
         }
@@ -124,31 +123,72 @@ public class Bank extends UnicastRemoteObject implements IBank
 
         boolean success = source_account.muteer(negative);
 
-        if (!success)
+        if (success)
         {
-            return false;
-        }
-
-        IRekeningTbvBank dest_account = (IRekeningTbvBank) getRekening(destination);
-
-        if (dest_account == null)
-        {
-            throw new NumberDoesntExistException("account " + destination + " unknown at " + name);
-        }
-
-        success = dest_account.muteer(money);
-
-        if (!success)// rollback
-        {
-            source_account.muteer(money);
+            if(bankName != null)
+            {
+                if(bankName.equals(name))
+                {
+                    success = maakOverTarget(destination, money);
+                }
+                else
+                {
+                    success = centralBank.createTransaction(source, destination, money, bankName);
+                }
+            }
+            else
+            {
+                success = false;
+            }
+            
+            if(!success)
+            {
+                source_account.muteer(money);
+            }
         }
 
         return success;
     }
+    
+    @Override
+    public boolean maakOverTarget(int destination, Money money) throws NumberDoesntExistException
+    {
+        boolean success = false;
+        
+        if(!accounts.containsKey(destination))
+        {
+            return false;
+        }
+        
+        try
+        {    
+            IRekeningTbvBank dest_account = (IRekeningTbvBank) getRekening(destination);
+            
+            if (dest_account == null)
+            {
+                return false;
+            }
+            
+            success = dest_account.muteer(money);
+            
+        } catch (RemoteException ex) {
+            Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally
+        {
+            return success;
+        }
+    }
 
     @Override
-    public String getName()
+    public String getName() throws RemoteException
     {
         return name;
+    }
+
+    @Override
+    public List<String> getHostedBanks() throws RemoteException
+    {
+        return centralBank.getHostedBanks();
     }
 }

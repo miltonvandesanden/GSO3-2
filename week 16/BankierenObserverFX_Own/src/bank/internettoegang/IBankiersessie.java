@@ -36,7 +36,7 @@ public interface IBankiersessie extends Remote
      *             als sessie niet meer geldig is 
     * @throws java.rmi.RemoteException 
      */
-    public boolean maakOver(int bestemming, Money bedrag) throws NumberDoesntExistException, InvalidSessionException, RemoteException;
+    public boolean maakOver(int bestemming, Money bedrag, String bankNaam) throws NumberDoesntExistException, InvalidSessionException, RemoteException;
 
     /**
      * @return de rekeninggegevens die horen bij deze sessie

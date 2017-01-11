@@ -1,12 +1,15 @@
 package bank.bankieren;
 
 import fontys.util.*;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  * @author 871059
  * 
  */
-public interface IBank extends IBankComms
+public interface IBank extends Remote
 {
 
     /**
@@ -20,8 +23,9 @@ public interface IBank extends IBankComms
      *            de woonplaats van de eigenaar van de nieuwe bankrekening
      * @return -1 zodra naam of plaats een lege string en anders het nummer van de
      *         gecreeerde bankrekening
+     * @throws java.rmi.RemoteException
      */
-    int openRekening(String naam, String plaats);
+    int openRekening(String naam, String plaats) throws RemoteException;
 
     /**
      * er wordt bedrag overgemaakt van de bankrekening met nummer bron naar de
@@ -37,18 +41,24 @@ public interface IBank extends IBankComms
      * @return <b>true</b> als de overmaking is gelukt, anders <b>false</b>
      * @throws NumberDoesntExistException
      *             als een van de twee bankrekeningnummers onbekend is
+     * @throws java.rmi.RemoteException
      */
-    @Override
-    boolean maakOver(int bron, int bestemming, Money bedrag) throws NumberDoesntExistException;
+    boolean maakOver(int bron, int bestemming, Money bedrag, String bankName) throws NumberDoesntExistException, RemoteException;
 
     /**
      * @param nr
      * @return de bankrekening met nummer nr mits bij deze bank bekend, anders null
+     * @throws java.rmi.RemoteException
      */
-    IRekening getRekening(int nr);
+    IRekening getRekening(int nr) throws RemoteException;
 
     /**
      * @return de naam van deze bank
+     * @throws java.rmi.RemoteException
      */
-    String getName();
+    String getName() throws RemoteException;
+    
+    public List<String> getHostedBanks() throws RemoteException;
+    
+    public boolean maakOverTarget(int destination, Money money) throws NumberDoesntExistException, RemoteException;
 }

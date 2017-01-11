@@ -47,14 +47,21 @@ public class BankiersessieTest
     @Before
     public void setUp()
     {
-        Bank bank = new Bank("Rabobank");
-        sourceRekeningNr = bank.openRekening("Milton", "Tilburg");
-        targetRekeningNr = bank.openRekening("Comrade Stefano", "Stalingrad");
-        money = new Money(100, Money.EURO);
-        
         try
         {
-            instance = new Bankiersessie(sourceRekeningNr, bank);
+            Bank bank = new Bank("Rabobank");
+            sourceRekeningNr = bank.openRekening("Milton", "Tilburg");
+            targetRekeningNr = bank.openRekening("Comrade Stefano", "Stalingrad");
+            money = new Money(100, Money.EURO);
+            
+            try
+            {
+                instance = new Bankiersessie(sourceRekeningNr, bank);
+            }
+            catch(RemoteException ex)
+            {
+                Logger.getLogger(BankiersessieTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         catch(RemoteException ex)
         {
