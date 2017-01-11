@@ -62,7 +62,7 @@ public class BalieServer extends Application {
             try {
                 this.nameBank = nameBank;
                 String address = java.net.InetAddress.getLocalHost().getHostAddress();
-                if(nameBank == "RaboBank")
+                if("RaboBank".equals(nameBank))
                 {
                     port = 1100;
                 }

@@ -23,6 +23,8 @@ public class Rekening implements IRekeningTbvBank
     private IKlant eigenaar;
     private Money saldo;
     
+    private Registry registry;
+    
     private IRemotePublisherForDomain publisher;
 
     /**
@@ -34,9 +36,9 @@ public class Rekening implements IRekeningTbvBank
      * @param klant de eigenaar van deze rekening
      * @param currency de munteenheid waarin het saldo is uitgedrukt
      */
-    public Rekening(int number, IKlant klant, String currency)
+    public Rekening(int number, IKlant klant, String currency, Registry registry)
     {
-        this(number, klant, new Money(0, currency));
+        this(number, klant, new Money(0, currency), registry);
     }
 
     /**
@@ -45,25 +47,27 @@ public class Rekening implements IRekeningTbvBank
      * het PersistentBank-object worden beheerd
      * @param klant
      * @param saldo
+     * @param registry
      * @see banking.persistence.PersistentBank
      * @param number het bankrekeningnummer
      */
-    public Rekening(int number, IKlant klant, Money saldo)
+    public Rekening(int number, IKlant klant, Money saldo, Registry registry)
     {
         this.nr = number;
         this.eigenaar = klant;
         this.saldo = saldo;
+        this.registry = registry;
         
         try
         {
             publisher = new RemotePublisher();
             publisher.registerProperty("saldo");
-            Naming.rebind("saldoPublisher" + this.nr, publisher);
+            
+//            Naming.rebind("saldoPublisher" + this.nr, publisher);
+            registry.rebind("saldoPublisher" + this.nr, publisher);
         }
         catch (RemoteException ex)
         {
-            Logger.getLogger(Rekening.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedURLException ex) {
             Logger.getLogger(Rekening.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

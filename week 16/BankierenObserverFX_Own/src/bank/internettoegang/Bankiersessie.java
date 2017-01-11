@@ -48,12 +48,14 @@ public class Bankiersessie extends UnicastRemoteObject implements IBankiersessie
 
         if (reknr == bestemming && bankNaam.equals(bank.getName()))
         {
-            throw new RuntimeException("source and destination must be different");
+            //throw new RuntimeException("source and destination must be different");
+            return false;
         }
                 
         if (!bedrag.isPositive())
         {
-            throw new RuntimeException("amount must be positive");
+            //throw new RuntimeException("amount must be positive");
+            return false;
         }
         
         return bank.maakOver(reknr, bestemming, bedrag, bankNaam);

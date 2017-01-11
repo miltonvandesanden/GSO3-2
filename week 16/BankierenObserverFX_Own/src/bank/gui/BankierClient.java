@@ -1,8 +1,3 @@
-
-
-
-
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -11,10 +6,6 @@
 
 package bank.gui;
 
-import bank.gui.BankSelectController;
-import bank.gui.BankierSessieController;
-import bank.gui.LoginController;
-import bank.gui.OpenRekeningController;
 import bank.internettoegang.IBalie;
 import bank.internettoegang.IBankiersessie;
 import java.io.FileInputStream;
@@ -45,7 +36,11 @@ public class BankierClient extends Application  {
     private final double MINIMUM_WINDOW_HEIGHT = 500.0;
     
     private BankierSessieController sessionController;
-   // 
+    
+    private String fileBankName;
+    private String fileIP;
+    private int filePort;
+
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -69,14 +64,14 @@ public class BankierClient extends Application  {
             FileInputStream in = new FileInputStream(bankName+".props");
             Properties props = new Properties();
             props.load(in);
-            String filePort = props.getProperty("port");
-            String fileBankName = props.getProperty("bank");
-            String fileIP = props.getProperty("ip");
+            filePort = Integer.parseInt(props.getProperty("port"));
+            fileBankName = props.getProperty("bank");
+            fileIP = props.getProperty("ip");
             in.close();
             
             //lookup met property ip port en name
             //IBalie balie = (IBalie) Naming.lookup("rmi://" + rmiBalie);
-            Registry registry = LocateRegistry.getRegistry(fileIP, Integer.parseInt(filePort));
+            Registry registry = LocateRegistry.getRegistry(fileIP, filePort);
             IBalie balie = (IBalie) registry.lookup(fileBankName);
             return balie;
 
@@ -152,5 +147,22 @@ public class BankierClient extends Application  {
     public static void main(String[] args) {
         launch(args);
     }
+
+    public String getFileBankName()
+    {
+        return fileBankName;
+    }
+
+    public String getFileIP()
+    {
+        return fileIP;
+    }
+
+    public int getFilePort()
+    {
+        return filePort;
+    }
+    
+    
     
 }

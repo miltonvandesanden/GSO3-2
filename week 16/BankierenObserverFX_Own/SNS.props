@@ -1,3 +1,4 @@
-#Tue May 27 01:12:14 CEST 2014
-balie=192.168.2.2\:1104/SNS
-port=1105
+#Wed Jan 11 19:14:21 CET 2017
+bank=SNS
+port=1104
+ip=192.168.192.57

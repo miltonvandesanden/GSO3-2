@@ -70,7 +70,7 @@ public class Bank extends UnicastRemoteObject implements IBank
         }
 
         IKlant klant = getKlant(name, city);
-        IRekeningTbvBank account = new Rekening(nieuwReknr, klant, Money.EURO);
+        IRekeningTbvBank account = new Rekening(nieuwReknr, klant, Money.EURO, registry);
         
         accounts.put(nieuwReknr,account);
         nieuwReknr++;

@@ -1,3 +1,4 @@
-#Wed Jan 11 12:29:36 CET 2017
-balie=192.168.192.57\:1108/ASN
-port=1109
+#Wed Jan 11 19:14:33 CET 2017
+bank=ASN
+port=1108
+ip=192.168.192.57

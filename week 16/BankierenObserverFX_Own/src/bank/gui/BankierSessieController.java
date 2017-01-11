@@ -100,11 +100,13 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
         
 
         try {
-            listener = (IRemotePublisherForListener) Naming.lookup("saldoPublisher" + tfAccountNr.getText());
+            //listener = (IRemotePublisherForListener) Naming.lookup("saldoPublisher" + tfAccountNr.getText());
+            Registry registry = LocateRegistry.getRegistry(application.getFileIP(), application.getFilePort() + 1);
+            listener = (IRemotePublisherForListener) registry.lookup("saldoPublisher" + tfAccountNr.getText());
             listener.subscribeRemoteListener(this, "saldo");
         } catch (NotBoundException ex) {
             Logger.getLogger(Bankiersessie.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException | MalformedURLException ex) {
+        } catch (RemoteException ex) {
             Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -150,7 +152,8 @@ public class BankierSessieController extends UnicastRemoteObject implements Init
         try {
             int from = Integer.parseInt(tfAccountNr.getText());
             int to = Integer.parseInt(tfToAccountNr.getText());
-            if (from == to) {
+            if (from == to && bankNaam.equals(application.getFileBankName()))
+            {
                 taMessage.setText("can't transfer money to your own account");
             }
             long centen = (long) (Double.parseDouble(tfAmount.getText()) * 100);
